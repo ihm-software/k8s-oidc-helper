@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 	"github.com/ghodss/yaml"
-	"github.com/micahhausler/k8s-oidc-helper/internal/helper"
+	"github.com/ihm-software/k8s-oidc-helper/internal/helper"
 	flag "github.com/spf13/pflag"
 	viper "github.com/spf13/viper"
 	k8s_runtime "k8s.io/apimachinery/pkg/runtime"
