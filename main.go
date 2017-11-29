@@ -8,7 +8,6 @@ import (
 	"os/user"
 	"path/filepath"
 	"strings"
-
 	"github.com/ghodss/yaml"
 	"github.com/micahhausler/k8s-oidc-helper/internal/helper"
 	flag "github.com/spf13/pflag"
@@ -21,9 +20,8 @@ import (
 
 const Version = "v0.1.0"
 
-const oauthUrl = "https://accounts.google.com/o/oauth2/auth?redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code&client_id=%s&scope=openid+email+profile&approval_prompt=force&access_type=offline"
-
 func main() {
+	flag.String("provider", "p", "google", "The oauth provider that you wish to authenticate with (eg. google github)")
 	flag.BoolP("version", "v", false, "Print version and exit")
 	flag.BoolP("open", "o", true, "Open the oauth approval URL in the browser")
 	flag.String("client-id", "", "The ClientID for the application")
@@ -64,10 +62,15 @@ func main() {
 		clientSecret = viper.GetString("client-secret")
 	}
 
+	if viper.GetString("provider") == "google"{
+		// Note, we default to google.
+		oauthUrl = "https://accounts.google.com/o/oauth2/auth?redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code&client_id=%s&scope=openid+email+profile&approval_prompt=force&access_type=offline"
+	}
+
 	helper.LaunchBrowser(viper.GetBool("open"), oauthUrl, clientID)
 
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Enter the code Google gave you: ")
+	fmt.Print("Enter the code %s gave you: ", provider)
 	code, _ := reader.ReadString('\n')
 	code = strings.TrimSpace(code)
 
